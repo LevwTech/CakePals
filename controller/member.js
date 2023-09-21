@@ -25,9 +25,8 @@ module.exports = {
   */
   listProducts: async (req, res) => {
     try {
-      const memberId = req.member._id;
+      const member = req.member;
       const { type } = req.body;
-      const member = await memberService.getMember(memberId);
       const location = member.address;
       const products = await productService.listProducts(location, type);
       res.status(200).json({

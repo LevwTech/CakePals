@@ -46,5 +46,11 @@ class ProductService {
     const products = await Product.find({}, params).populate('baker').exec();
     return products;
   }
+
+  static async getProduct(productId) {
+    const product = await Product.findById(productId).populate('baker').exec();
+    if (!product) throw new Error('Product not found');
+    return product;
+  }
 }
 module.exports = ProductService;
