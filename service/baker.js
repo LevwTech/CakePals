@@ -22,5 +22,11 @@ class BakerService {
       } else res.send('Baker Not Found');
     });
   }
+
+  static async getBakerProfile(bakerId) {
+    const baker = await Baker.findById(bakerId);
+    if (!baker) throw new Error('Baker not found');
+    return baker;
+  }
 }
 module.exports = BakerService;

@@ -8,7 +8,10 @@ module.exports = {
       });
       res
         .status(201)
-        .json({ message: 'Product has been added successfully', product });
+        .json({
+          message: 'Product has been added successfully',
+          data: product,
+        });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
