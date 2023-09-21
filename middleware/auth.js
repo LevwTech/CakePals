@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
-const Baker = require('../models/user');
-const Member = require('../models/member');
-const Baker = require('../models/baker');
+const Member = require('../model/member');
+const Baker = require('../model/baker');
 
 const bakerAuth = async function (req, res, next) {
   const token = req.header('Authorization')?.replace('Bearer ', '');
