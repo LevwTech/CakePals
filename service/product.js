@@ -1,4 +1,5 @@
 const Product = require('../model/product');
+const { MAX_DISTANCE_IN_METERS } = require('../config/constants');
 
 class ProductService {
   static async addProduct(body) {
@@ -8,7 +9,7 @@ class ProductService {
     return product;
   }
 
-  static async editProduct(bakerId, productId, bakingTime, type) {
+  static async editProduct({ bakerId, productId, bakingTime, type }) {
     validateProductIsOwnedByBaker(bakerId, productId);
     const product = await Product.findById(productId);
     if (bakingTime) product.bakingTime = bakingTime;
@@ -27,6 +28,23 @@ class ProductService {
     const ownedByBaker = product.baker._id.toString() === bakerId;
     if (!ownedByBaker)
       throw new Error('You are not allowed to edit or delete this product');
+  }
+
+  static async listProducts({ location, type }) {
+    const params = {
+      [`baker.location`]: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [location.long, location.lat],
+          },
+          $maxDistance: MAX_DISTANCE_IN_METERS,
+        },
+      },
+    };
+    if (type) params.type = type;
+    const products = await Product.find({}, params).populate('baker').exec();
+    return products;
   }
 }
 module.exports = ProductService;

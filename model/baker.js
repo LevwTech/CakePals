@@ -64,6 +64,8 @@ const bakerSchema = new mongoose.Schema({
   ],
 });
 
+bakerSchema.index({ location: '2dsphere' });
+
 bakerSchema.pre('save', async function (next) {
   if (this.isModified('password'))
     this.password = await bcrypt.hash(this.password, 8);

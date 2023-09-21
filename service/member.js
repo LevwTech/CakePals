@@ -20,5 +20,11 @@ class MemberService {
       } else res.send('Member Not Found');
     });
   }
+
+  static async getMember(memberId) {
+    const member = await Member.findById(memberId);
+    if (!member) throw new Error('Member not found');
+    return member;
+  }
 }
 module.exports = MemberService;

@@ -1,0 +1,3 @@
+const MAX_DISTANCE_IN_METERS = 10000;
+
+module.exports = { MAX_DISTANCE_IN_METERS };

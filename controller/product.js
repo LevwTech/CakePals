@@ -18,7 +18,12 @@ module.exports = {
     try {
       const { productId, type, bakingTime } = req.body;
       const bakerId = req.baker._id;
-      await productService.editProduct(bakerId, productId, bakingTime, type);
+      await productService.editProduct({
+        bakerId,
+        productId,
+        bakingTime,
+        type,
+      });
       res.status(201).json({ message: 'Product has been edited successfully' });
     } catch (err) {
       res.status(400).json({ message: err.message });
