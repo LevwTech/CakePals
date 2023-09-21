@@ -1,4 +1,7 @@
 const Member = require('../model/member');
+const Order = require('../model/order');
+const Product = require('../model/product');
+const Baker = require('../model/baker');
 
 class MemberService {
   static async createMember(body) {
@@ -25,6 +28,30 @@ class MemberService {
     const member = await Member.findById(memberId);
     if (!member) throw new Error('Member not found');
     return member;
+  }
+
+  static async rateOrder(memberId, orderId, rating) {
+    const possibleRatings = [1, 2, 3, 4, 5];
+    if (!possibleRatings.includes(rating)) throw new Error('Invalid rating');
+    validateOrderIsOwnedByMember(memberId, orderId);
+    Order.findByIdAndUpdate(orderId, { rating });
+    const order = await findById(orderId).populate('product').exec();
+    const productId = order.product._id;
+    const product = await findOById(productId).populate('baker').exec();
+    const bakerId = product.baker._id;
+    const baker = await Baker.findOne(bakerId);
+    const bakerRating = baker.rating;
+    const orderCount = await Order.countDocuments({ baker: bakerId });
+    const newBakerRating = (bakerRating + rating) / orderCount;
+    baker.rating = newBakerRating;
+    await baker.save();
+  }
+
+  static async validateOrderIsOwnedByMember(memberId, orderId) {
+    const order = await Order.findById(orderId).populate('member').exec();
+    const ownedByMember = order.member._id.toString() === memberId;
+    if (!ownedByMember)
+      throw new Error('You are not allowed to edit this order');
   }
 }
 module.exports = MemberService;

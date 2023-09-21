@@ -1,5 +1,6 @@
 const memberService = require('../service/member');
 const productService = require('../service/product');
+const orderService = require('../service/order');
 
 module.exports = {
   registerMember: async (req, res) => {
@@ -32,6 +33,18 @@ module.exports = {
       res.status(200).json({
         message: 'Products has been sent successfully',
         data: products,
+      });
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+  rateOrder: async (req, res) => {
+    try {
+      const memberId = req.member._id;
+      const { orderId, rating } = req.body;
+      await memberService.rateOrder(memberId, orderId, rating);
+      res.status(200).json({
+        message: 'Order has been rated successfully',
       });
     } catch (err) {
       res.status(400).json({ message: err.message });

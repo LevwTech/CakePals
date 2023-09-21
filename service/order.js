@@ -28,11 +28,11 @@ class OrderService {
   }
 
   static async editOrderStatus({ bakerId, orderId, status }) {
-    validateOwnerIsOwnedByBaker(bakerId, orderId);
+    validateOrderIsOwnedByBaker(bakerId, orderId);
     await Order.findByIdAndUpdate(orderId, { status });
   }
 
-  static async validateOwnerIsOwnedByBaker(bakerId, orderId) {
+  static async validateOwnerIsOrderByBaker(bakerId, orderId) {
     const order = await Order.findById(orderId).populate('baker').exec();
     const ownedByBaker = order.baker._id.toString() === bakerId;
     if (!ownedByBaker)
