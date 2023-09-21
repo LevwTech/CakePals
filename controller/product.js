@@ -6,7 +6,9 @@ module.exports = {
         ...req.body,
         baker: req.baker._id,
       });
-      res.status(201).json(product);
+      res
+        .status(201)
+        .json({ message: 'Product has been added successfully', product });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
