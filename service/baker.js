@@ -6,8 +6,8 @@ class BakerService {
   static async createBaker(body) {
     const baker = new Baker(...body);
     await baker.save();
-    const token = user.generateAuthToken();
-    res.status(201).send({ user, token });
+    const token = baker.generateAuthToken();
+    res.status(201).send({ baker, token });
     if (!baker) throw new Error('Failed to create baker');
     return baker;
   }
@@ -17,7 +17,7 @@ class BakerService {
     if (!baker) throw new Error('Invalid credentials');
     bcrypt.compare(body.password, baker.password).then((exists) => {
       if (exists) {
-        const token = member.generateAuthToken();
+        const token = baker.generateAuthToken();
         res.send({ baker, token });
       } else res.send('Baker Not Found');
     });
