@@ -4,6 +4,8 @@ class MemberService {
   static async createMember(body) {
     const member = new Member(...body);
     await member.save();
+    const token = user.generateAuthToken();
+    res.status(201).send({ user, token });
     if (!member) throw new Error('Failed to create member');
     return member;
   }
