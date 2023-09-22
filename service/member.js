@@ -36,6 +36,8 @@ class MemberService {
     validateOrderIsOwnedByMember(memberId, orderId);
     Order.findByIdAndUpdate(orderId, { rating });
     const order = await findById(orderId).populate('product').exec();
+    If(order.status !== "delivered")
+      throw new Error('You can't rate this order yet');
     const productId = order.product._id;
     const product = await findOById(productId).populate('baker').exec();
     const bakerId = product.baker._id;
